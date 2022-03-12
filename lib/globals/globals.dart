@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quran_app_new/database_bookmark/bookmark_database.dart';
 import 'package:quran_app_new/model/bookmark_model.dart';
+import 'package:quran_app_new/model/quran_model.dart';
 
 bool isSound = false;
 var pageIndex;
@@ -8,7 +9,7 @@ var para_num = 1;
 final growableList = [];
 SqfliteDatabaseHelperClass bookmarkDb = SqfliteDatabaseHelperClass();
 var book;
-
+List<QuranPakModel> imgPage = [];
 Future<List<BookmarkModel>>? bookmarks;
 List<Color> overlayColors = [
   Color(0xffCBCBCB),
