@@ -29,7 +29,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
   }
 
   void loadBookmarks() {
-    bookmarks = bookmarkDb.getAlarms();
+    bookmarks = bookmarkDb.getBookmarks();
     if (mounted) setState(() {});
   }
 
@@ -40,7 +40,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
 
     return Scaffold(
         body: FutureBuilder<List<BookmarkModel>>(
-      future: bookmarkDb.getAlarms(),
+      future: bookmarkDb.getBookmarks(),
       builder: (context, snapshot) {
         // currentBookmarks = snapshot.data;
         print(".......................$snapshot");
@@ -60,50 +60,57 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                           left: width * 0.04, right: width * 0.04),
                       child: Column(
                         children: [
-                          Container(
-                              height: height * 0.06,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: ListTile(
-                                title: Text(
-                                  "Page: ${snapshot.data?[index].bookmarkPage}",
-                                  style: TextStyle(
-                                      color: ColorsClass().dartColor,
-                                      fontSize: 20,
-                                      fontFamily: 'Roboto',
-                                      package: "awesome_package"),
+                          GestureDetector(
+                            child: Container(
+                                height: height * 0.06,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
-                                // subtitle: Text(
-                                //   "Page: ${snapshot.data?[index].bookmarkSurah}",
-                                //   style: TextStyle(
-                                //       color: ColorsClass().dartColor,
-                                //       fontSize: 16,
-                                //       fontFamily: 'Roboto',
-                                //       package: "awesome_package"),
-                                // ),
-                                trailing: IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_forward_ios_outlined,
-                                    color: ColorsClass().dartColor,
+                                child: ListTile(
+                                  title: Text(
+                                    "Page: ${snapshot.data?[index].bookmarkPage}",
+                                    style: TextStyle(
+                                        color: ColorsClass().dartColor,
+                                        fontSize: 20,
+                                        fontFamily: 'Roboto',
+                                        package: "awesome_package"),
                                   ),
-                                  onPressed: () {
-                                    // deleteAlarm(0);
-                                    // snapshot.data?.removeAt(index);
-                                    Get.to(QuranPakScreen((int.parse(p!)), ''));
-                                    // print(
-                                    //     "......... ${TOPICS_NAMES_ARRAY[index]}");
-                                    // setState(() {
-                                    //   //currentBookmarks?.removeAt(index);
-                                    //   snapshot.data
-                                    //       ?.indexOf(snapshot.data![index]);
-                                    //   snapshot.data?.removeAt(index);
-                                    //   print(
-                                    //       "........remove: ${snapshot.data?.removeAt(index)}");
-                                    // });
-                                  },
-                                ),
-                              )),
+                                  subtitle: Text(
+                                    "Para: ${snapshot.data?[index].bookmarkSurah}",
+                                    style: TextStyle(
+                                        color: ColorsClass().dartColor,
+                                        fontSize: 16,
+                                        fontFamily: 'Roboto',
+                                        package: "awesome_package"),
+                                  ),
+                                  trailing: IconButton(
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: ColorsClass().dartColor,
+                                    ),
+                                    onPressed: () {
+                                      deleteAlarm(int.parse(snapshot
+                                          .data![index].bookmark_id
+                                          .toString()));
+                                      // snapshot.data?.removeAt(index);
+                                      // Get.to(QuranPakScreen((int.parse(p!)), ''));
+                                      // print(
+                                      //     "......... ${TOPICS_NAMES_ARRAY[index]}");
+                                      // setState(() {
+                                      //   //currentBookmarks?.removeAt(index);
+                                      //   snapshot.data
+                                      //       ?.indexOf(snapshot.data![index]);
+                                      //   snapshot.data?.removeAt(index);
+                                      //   print(
+                                      //       "........remove: ${snapshot.data?.removeAt(index)}");
+                                      // });
+                                    },
+                                  ),
+                                )),
+                            onTap: () {
+                              Get.to(QuranPakScreen((int.parse(p!)), ''));
+                            },
+                          ),
                           Divider(
                             color: ColorsClass().light,
                             indent: width * 0.05,

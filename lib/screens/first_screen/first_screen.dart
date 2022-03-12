@@ -15,40 +15,46 @@ class FirstScreen extends StatelessWidget {
         Duration(seconds: 6),
         () => Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (BuildContext context) => QuranPakScreen(0, 1))));
-    return Scaffold(
-      backgroundColor: ColorsClass().color1,
-      body: Container(
-        height: height,
-        width: width,
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                  left: width * 0.1, right: width * 0.1, top: height * 0.05),
-              child:
-                  Container(child: Image.asset("assets/first/first_anim.gif")),
+    return WillPopScope(
+        child: Scaffold(
+          backgroundColor: ColorsClass().color1,
+          body: Container(
+            height: height,
+            width: width,
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: width * 0.1,
+                      right: width * 0.1,
+                      top: height * 0.05),
+                  child: Container(
+                      child: Image.asset("assets/first/first_anim.gif")),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: width * 0.1,
+                      right: width * 0.1,
+                      top: height * 0.05),
+                  child: Container(
+                      height: height * 0.25,
+                      width: width * 0.35,
+                      child: Image.asset("assets/first/img.png")),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: width * 0.12,
+                    right: width * 0.1,
+                  ),
+                  child: Container(
+                      height: height * 0.25,
+                      width: width * 0.6,
+                      child: Image.asset("assets/first/first_quran.png")),
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: width * 0.1, right: width * 0.1, top: height * 0.05),
-              child: Container(
-                  height: height * 0.25,
-                  width: width * 0.35,
-                  child: Image.asset("assets/first/img.png")),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: width * 0.12,
-                right: width * 0.1,
-              ),
-              child: Container(
-                  height: height * 0.25,
-                  width: width * 0.6,
-                  child: Image.asset("assets/first/first_quran.png")),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
+        onWillPop: () async => false);
   }
 }

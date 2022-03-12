@@ -34,7 +34,7 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
   String songpath = "assets/sound/bookpage.mp3";
 
   var ContainerColor = Colors.white;
-  var ImageColor;
+  var ImageColor = null;
   bool isdarkMode = false;
   bool isSound = false;
 
@@ -64,7 +64,7 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
       page_controller = PageController(initialPage: pageIndex);
       print(".........");
     }
-
+    imgPage = quran_pak_model_list;
     getDarkMode();
     getBackgroundColor();
     getImageColor();
@@ -73,6 +73,7 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
     //getParahNo();
     getSurah();
 
+    LoadQuranPage;
     super.initState();
   }
 
@@ -151,6 +152,12 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
     setState(() {});
   }
 
+  void LoadQuranPage(int index) {
+    setState(() {
+      // imgPage = quran_pak_model_list[index].quran_image;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -183,47 +190,50 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
       body: Column(
         children: [
           Expanded(
-            child: PageView.builder(
-                itemCount: quran_pak_model_list.length,
-                reverse: true,
-                controller: page_controller,
-                onPageChanged: (value) async {
-                  if (mainController.isPlaying.value == true) {
-                    ByteData bytes = await rootBundle
-                        .load(songpath); //load sound from assets
-                    Uint8List soundbytes = bytes.buffer
-                        .asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-                    await mainController.player.value.playBytes(soundbytes);
-                    isSound = true;
-                  } else {
-                    print("*******");
-                  }
+            child: Padding(
+              padding: EdgeInsets.only(top: height * 0.05),
+              child: PageView.builder(
+                  itemCount: quran_pak_model_list.length,
+                  reverse: true,
+                  controller: page_controller,
+                  onPageChanged: (value) async {
+                    if (mainController.isPlaying.value == true) {
+                      ByteData bytes = await rootBundle
+                          .load(songpath); //load sound from assets
+                      Uint8List soundbytes = bytes.buffer.asUint8List(
+                          bytes.offsetInBytes, bytes.lengthInBytes);
+                      await mainController.player.value.playBytes(soundbytes);
+                      isSound = true;
+                    } else {
+                      print("*******");
+                    }
 
-                  // setSoundMode();
-                },
-                itemBuilder: (_, pagePosition) {
-                  print(".......page index -----$pagePosition");
-                  pageIndex = pagePosition;
-                  return Container(
-                    child: Image.asset(
-                      quran_pak_model_list[pagePosition].quran_image,
-                      color: ImageColor,
-                    ),
-                    decoration: BoxDecoration(
-                        // image: DecorationImage(
-                        //     image: AssetImage(
-                        //       quran_pak_model_list[pagePosition].quran_image,
-                        //     ),
-                        //     colorFilter:
-                        //         ColorFilter.mode(ImageColor, BlendMode.xor)),
-                        color: ContainerColor
-                        //color: Get.isDarkMode ? Colors.black : Colors.white
-                        // image: DecorationImage(
-                        //     image: AssetImage("assets/page4.png")
-                        // )
-                        ),
-                  );
-                }),
+                    // setSoundMode();
+                  },
+                  itemBuilder: (_, pagePosition) {
+                    print(".......page index -----$pagePosition");
+                    pageIndex = pagePosition;
+                    return Container(
+                      child: Image.asset(
+                        imgPage[pagePosition].quran_image,
+                        color: ImageColor,
+                      ),
+                      decoration: BoxDecoration(
+                          // image: DecorationImage(
+                          //     image: AssetImage(
+                          //       quran_pak_model_list[pagePosition].quran_image,
+                          //     ),
+                          //     colorFilter:
+                          //         ColorFilter.mode(ImageColor, BlendMode.xor)),
+                          color: ContainerColor
+                          //color: Get.isDarkMode ? Colors.black : Colors.white
+                          // image: DecorationImage(
+                          //     image: AssetImage("assets/page4.png")
+                          // )
+                          ),
+                    );
+                  }),
+            ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -270,7 +280,8 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
                                   } else {
                                     setState(() {
                                       ContainerColor = Colors.white;
-                                      ImageColor = Colors.black;
+                                      imgPage = quran_pak_model_list;
+                                      ImageColor = null;
                                       isdarkMode = false;
                                     });
                                   }
@@ -414,7 +425,7 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
                   //SizedBox(width: width * 0.23),
                   GestureDetector(
                     child: Image.asset(
-                      "assets/dialog/reset.png",
+                      "assets/dialog/save.png",
                       height: height * 0.04,
                       width: width * 0.3,
                     ),
@@ -540,7 +551,9 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
                               height: height * 0.23,
                               color: Colors.white,
                               child: BlockPicker(
-                                pickerColor: ImageColor,
+                                pickerColor: ImageColor == null
+                                    ? Colors.white
+                                    : ImageColor,
                                 onColorChanged: changeCImageColor,
                                 availableColors: colorHistory.isNotEmpty
                                     ? colorHistory
@@ -667,21 +680,30 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
                     child: Image.asset(
                       "assets/dialog/cancel.png",
                       height: height * 0.04,
-                      width: width * 0.25,
+                      width: width * 0.23,
                     ),
                     onTap: () {
+                      ContainerColor = Colors.white;
+                      //LoadQuranPage(6);
+                      setState(() {});
+                      ImageColor = null;
+                      // setState(() {});
+                      // ImageColor = Colors.black;
                       Get.back();
+                      setImageColor();
+                      setBackgroundColor();
                     },
                   ),
                   GestureDetector(
                     child: Image.asset(
                       "assets/dialog/save.png",
                       height: height * 0.04,
-                      width: width * 0.25,
+                      width: width * 0.23,
                     ),
                     onTap: () {
                       setImageColor();
                       setBackgroundColor();
+                      setState(() {});
                       Get.back();
                     },
                   ),
@@ -689,13 +711,17 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
                     child: Image.asset(
                       "assets/dialog/reset.png",
                       height: height * 0.04,
-                      width: width * 0.25,
+                      width: width * 0.23,
                     ),
                     onTap: () {
                       // setImageColor();
                       // setBackgroundColor();
                       ContainerColor = Colors.white;
-                      ImageColor = Colors.black;
+                      //LoadQuranPage(6);
+                      setState(() {});
+                      ImageColor = null;
+                      setImageColor();
+                      setBackgroundColor();
                       Get.back();
                     },
                   ),
@@ -933,10 +959,11 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
     //     await SqfliteDatabaseHelperClass.instance.retrieveBookmarkDetails();
     // int id = lastRecord[SqfliteDatabaseHelperClass.COL_BOOKMARK_ID];
     book = BookmarkModel(
-        bookmarkPage: pageIndex.toString(), bookmarkSurah: surah_name);
+        bookmarkPage: pageIndex.toString(), bookmarkSurah: para_num.toString());
     bookmarkDb.insertBookmark(book);
-    bookmarkDb.getAlarms();
+    bookmarkDb.getBookmarks();
     print("...............saved: $pageIndex ");
     print("...............saved: $surah_name ");
+    print("...............saved: $para_num ");
   }
 }

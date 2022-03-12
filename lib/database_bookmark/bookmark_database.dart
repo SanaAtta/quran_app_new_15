@@ -53,7 +53,7 @@ class SqfliteDatabaseHelperClass {
     print('result: $result');
   }
 
-  Future<List<BookmarkModel>> getAlarms() async {
+  Future<List<BookmarkModel>> getBookmarks() async {
     List<BookmarkModel> _bookmark = [];
 
     var db = await this.database;

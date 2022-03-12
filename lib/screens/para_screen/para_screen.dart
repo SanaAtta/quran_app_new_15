@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quran_app_new/colors/colors.dart';
+import 'package:quran_app_new/globals/globals.dart';
 import 'package:quran_app_new/model/para_model.dart';
+import 'package:quran_app_new/model/quran_model.dart';
 import 'package:quran_app_new/screens/first_screen/first_screen.dart';
 import 'package:quran_app_new/screens/quran_screen/quran_screen.dart';
 
@@ -78,6 +80,7 @@ class ParaScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
+                    imgPage = quran_pak_model_list;
                     if (paraModelList[index].para_index == 0) {
                       Get.to(FirstScreen());
                     } else if (paraModelList[index].para_index == 21) {
@@ -96,6 +99,48 @@ class ParaScreen extends StatelessWidget {
                       Get.to(QuranPakScreen(141, 8));
                     } else if (paraModelList[index].para_index == 161) {
                       Get.to(QuranPakScreen(161, 9));
+                    } else if (paraModelList[index].para_index == 181) {
+                      Get.to(QuranPakScreen(181, 10));
+                    } else if (paraModelList[index].para_index == 201) {
+                      Get.to(QuranPakScreen(201, 11));
+                    } else if (paraModelList[index].para_index == 221) {
+                      Get.to(QuranPakScreen(221, 12));
+                    } else if (paraModelList[index].para_index == 241) {
+                      Get.to(QuranPakScreen(241, 13));
+                    } else if (paraModelList[index].para_index == 261) {
+                      Get.to(QuranPakScreen(261, 14));
+                    } else if (paraModelList[index].para_index == 281) {
+                      Get.to(QuranPakScreen(281, 15));
+                    } else if (paraModelList[index].para_index == 301) {
+                      Get.to(QuranPakScreen(301, 16));
+                    } else if (paraModelList[index].para_index == 321) {
+                      Get.to(QuranPakScreen(321, 17));
+                    } else if (paraModelList[index].para_index == 341) {
+                      Get.to(QuranPakScreen(341, 18));
+                    } else if (paraModelList[index].para_index == 361) {
+                      Get.to(QuranPakScreen(361, 19));
+                    } else if (paraModelList[index].para_index == 381) {
+                      Get.to(QuranPakScreen(381, 20));
+                    } else if (paraModelList[index].para_index == 401) {
+                      Get.to(QuranPakScreen(401, 21));
+                    } else if (paraModelList[index].para_index == 421) {
+                      Get.to(QuranPakScreen(421, 22));
+                    } else if (paraModelList[index].para_index == 441) {
+                      Get.to(QuranPakScreen(441, 23));
+                    } else if (paraModelList[index].para_index == 461) {
+                      Get.to(QuranPakScreen(461, 24));
+                    } else if (paraModelList[index].para_index == 481) {
+                      Get.to(QuranPakScreen(481, 25));
+                    } else if (paraModelList[index].para_index == 501) {
+                      Get.to(QuranPakScreen(501, 26));
+                    } else if (paraModelList[index].para_index == 521) {
+                      Get.to(QuranPakScreen(521, 27));
+                    } else if (paraModelList[index].para_index == 541) {
+                      Get.to(QuranPakScreen(541, 28));
+                    } else if (paraModelList[index].para_index == 561) {
+                      Get.to(QuranPakScreen(561, 29));
+                    } else if (paraModelList[index].para_index == 585) {
+                      Get.to(QuranPakScreen(585, 30));
                     }
                   },
                 ),
