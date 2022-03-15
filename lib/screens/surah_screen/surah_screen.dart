@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:quran_app_new/admob/ads.dart';
 import 'package:quran_app_new/colors/colors.dart';
+import 'package:quran_app_new/controller/mainController.dart';
 import 'package:quran_app_new/globals/globals.dart';
 import 'package:quran_app_new/model/quran_model.dart';
 import 'package:quran_app_new/model/surah_model.dart';
@@ -10,7 +12,7 @@ import 'package:quran_app_new/screens/quran_screen/quran_screen.dart';
 var surah_name = "Al-Fatihah";
 
 class SurahScreen extends StatelessWidget {
-  const SurahScreen({Key? key}) : super(key: key);
+  MainController mainController = Get.put(MainController());
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +110,10 @@ class SurahScreen extends StatelessWidget {
                 ],
               ),
               onTap: () {
+                mainController.surahIncrement();
+                if (mainController.surahCount.value == 4)
+                  Ads.showInterstitialAd();
+                print(".......count valueee${mainController.surahCount.value}");
                 imgPage = quran_pak_model_list;
                 print(
                     "..surah-name  .. ${surah_name = surahModelList[index].eng_name.toString()}");

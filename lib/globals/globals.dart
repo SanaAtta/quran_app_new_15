@@ -11,6 +11,8 @@ SqfliteDatabaseHelperClass bookmarkDb = SqfliteDatabaseHelperClass();
 var book;
 List<QuranPakModel> imgPage = [];
 Future<List<BookmarkModel>>? bookmarks;
+String recentTime =
+    '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}';
 List<Color> overlayColors = [
   Color(0xffCBCBCB),
   Color(0xffFFA5A5),

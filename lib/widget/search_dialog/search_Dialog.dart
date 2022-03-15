@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:quran_app_new/colors/colors.dart';
+import 'package:quran_app_new/screens/first_screen/first_screen.dart';
 import 'package:quran_app_new/screens/quran_screen/quran_screen.dart';
 
 class SearchDialogWidget extends StatelessWidget {
@@ -61,22 +62,24 @@ class SearchDialogWidget extends StatelessWidget {
               width: width * 0.3,
               child: ElevatedButton(
                 onPressed: () {
-                  if (int.parse(searchController.text) > 609) {
-                    Get.snackbar("Invalid Range", "Enter between 0 and 609",
+                  if (int.parse(searchController.text) == 1) {
+                    Get.to(FirstScreen());
+                  } else if (int.parse(searchController.text) > 611) {
+                    Get.snackbar("Invalid Range", "Enter between 1 and 609",
                         backgroundColor: ColorsClass().color1,
                         snackPosition: SnackPosition.BOTTOM);
                   } else {
-                    Get.to(
-                        QuranPakScreen(int.parse(searchController.text), ''));
+                    Get.to(QuranPakScreen(
+                        int.parse(searchController.text) - 2, ""));
                   }
 
-                  // if (searchController.text.toString() == "1") {
+                  // if (int.parse(searchController.text) == 1) {
                   //   Get.to(QuranPakScreen(0, ""));
-                  // } else if (searchController.text.toString() == "2") {
+                  // } else if (int.parse(searchController.text) == 2) {
                   //   Get.to(QuranPakScreen(1, ""));
                   //   searchController.clear();
-                  // } else if (searchController.text.toString() == "2") {
-                  //   Get.to(QuranPakScreen(1, ""));
+                  // } else {
+                  //   Get.to(QuranPakScreen(int.parse(searchController.text) - 2, ""));
                   //   searchController.clear();
                   // }
                 },

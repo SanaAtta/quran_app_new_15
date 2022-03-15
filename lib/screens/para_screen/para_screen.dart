@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quran_app_new/admob/ads.dart';
 import 'package:quran_app_new/colors/colors.dart';
+import 'package:quran_app_new/controller/mainController.dart';
 import 'package:quran_app_new/globals/globals.dart';
 import 'package:quran_app_new/model/para_model.dart';
 import 'package:quran_app_new/model/quran_model.dart';
@@ -8,7 +10,7 @@ import 'package:quran_app_new/screens/first_screen/first_screen.dart';
 import 'package:quran_app_new/screens/quran_screen/quran_screen.dart';
 
 class ParaScreen extends StatelessWidget {
-  const ParaScreen({Key? key}) : super(key: key);
+  MainController mainController = Get.put(MainController());
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +82,12 @@ class ParaScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
+                    mainController.paraIncrement();
+                    if (mainController.paraCount.value == 4)
+                      Ads.showInterstitialAd();
+                    print(
+                        ".......count valueee${mainController.paraCount.value}");
+
                     imgPage = quran_pak_model_list;
                     if (paraModelList[index].para_index == 0) {
                       Get.to(FirstScreen());

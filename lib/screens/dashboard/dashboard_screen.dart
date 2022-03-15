@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:quran_app_new/admob/admob_helper.dart';
+import 'package:quran_app_new/admob/ads.dart';
 import 'package:quran_app_new/colors/colors.dart';
 import 'package:quran_app_new/globals/globals.dart';
 import 'package:quran_app_new/screens/bookmark/bookmark_screen.dart';
@@ -12,6 +15,7 @@ import 'package:quran_app_new/screens/quran_screen/quran_screen.dart';
 import 'package:quran_app_new/screens/surah_screen/surah_screen.dart';
 import 'package:quran_app_new/widget/drawer/drawer.dart';
 import 'package:quran_app_new/widget/search_dialog/search_Dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -27,12 +31,46 @@ class _DashboardScreenState extends State<DashboardScreen>
   late TabController _controller;
 
   int _selectedIndex = 0;
+  var bannerAd;
+  bool isBannerAdReady = false;
   @override
   void initState() {
     super.initState();
     _controller =
         TabController(length: 4, initialIndex: _selectedIndex, vsync: this);
     _controller.addListener(_handleTabSelection);
+    getRecentTime();
+    loadbannerAd();
+  }
+
+  loadbannerAd() {
+    bannerAd = BannerAd(
+      adUnitId: AdmobHelper().bannerId,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          isBannerAdReady = true;
+          bannerAd = ad;
+          print("baner ad calling");
+          setState(() {});
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          isBannerAdReady = false;
+          setState(() {});
+          ad.dispose();
+        },
+      ),
+    );
+    bannerAd.load();
+  }
+
+  getRecentTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    recentTime = prefs.getString('time')!;
+    print(".........................time: $recentTime");
+    setState(() {});
   }
 
   @override
@@ -94,7 +132,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 body: Stack(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: height * 0.215),
+                      padding: EdgeInsets.only(top: height * 0.27),
                       child: Column(
                         children: <Widget>[
                           TabBar(
@@ -157,10 +195,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                       padding: EdgeInsets.only(
                           left: width * 0.03,
                           right: width * 0.03,
-                          top: height * 0.0),
+                          top: height * 0.07),
                       child: GestureDetector(
                         child: Image.asset("assets/main/img.png"),
                         onTap: () {
+                          Ads.showInterstitialAd();
                           Get.to(QuranPakScreen(
                             pageIndex,
                             para_num,
@@ -171,9 +210,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                          left: width * 0.1,
+                          left: width * 0.07,
                           right: width * 0.03,
-                          top: height * 0.07),
+                          top: height * 0.13),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -185,14 +224,17 @@ class _DashboardScreenState extends State<DashboardScreen>
                                 fontFamily: 'Roboto',
                                 package: "awesome_package"),
                           ),
-                          // Text(
-                          //   "Para No : $para_num",
-                          //   style: TextStyle(
-                          //       color: ColorsClass().dartColor,
-                          //       fontSize: 18,
-                          //       fontFamily: 'Roboto',
-                          //       package: "awesome_package"),
-                          // ),
+                          SizedBox(
+                            height: height * 0.04,
+                          ),
+                          Text(
+                            "Date : $recentTime",
+                            style: TextStyle(
+                                color: ColorsClass().dartColor,
+                                fontSize: 18,
+                                fontFamily: 'Roboto',
+                                package: "awesome_package"),
+                          ),
                           // Text(
                           //   "Page No: $pageIndex",
                           //   style: TextStyle(
@@ -203,7 +245,21 @@ class _DashboardScreenState extends State<DashboardScreen>
                           // ),
                         ],
                       ),
-                    )
+                    ),
+                    if (isBannerAdReady)
+                      Padding(
+                        padding: EdgeInsets.only(top: height * 0.0),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            width: bannerAd.size.width.toDouble(),
+                            height: bannerAd.size.height.toDouble(),
+                            child: AdWidget(
+                              ad: bannerAd,
+                            ),
+                          ),
+                        ),
+                      )
                   ],
                 )),
           ),

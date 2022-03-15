@@ -144,7 +144,7 @@ List<ParaModel> paraModelList = [
   ParaModel(
       para_title: " قَالَ فَمَا خَطْبُكُم ",
       para_index: 521,
-      para_title_eng: "Qala Fama Khatbukum",
+      para_title_eng: "Qala Fama ",
       arabic_num: ".۲۷"),
   ParaModel(
       para_title: " قَدْ سَمِعَ اللَّهُ ",

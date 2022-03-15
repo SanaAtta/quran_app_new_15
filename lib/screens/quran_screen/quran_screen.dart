@@ -3,9 +3,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:quran_app_new/admob/admob_helper.dart';
 import 'package:quran_app_new/colors/colors.dart';
 import 'package:quran_app_new/controller/mainController.dart';
 import 'package:quran_app_new/globals/globals.dart';
@@ -52,7 +53,9 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
       setState(() => currentColors = colors);
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
+  int i = 2;
+  var bannerAd;
+  bool isBannerAdReady = false;
   @override
   void initState() {
     //para_num = widget.parah_no;
@@ -74,7 +77,31 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
     getSurah();
 
     LoadQuranPage;
+    loadbannerAd();
     super.initState();
+  }
+
+  loadbannerAd() {
+    bannerAd = BannerAd(
+      adUnitId: AdmobHelper().bannerId,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          isBannerAdReady = true;
+          bannerAd = ad;
+          print("baner ad calling");
+          setState(() {});
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          isBannerAdReady = false;
+          setState(() {});
+          ad.dispose();
+        },
+      ),
+    );
+    bannerAd.load();
   }
 
   getDarkMode() async {
@@ -285,9 +312,9 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
                                       isdarkMode = false;
                                     });
                                   }
-                                  setImageColor();
-                                  setDarkMode();
-                                  setBackgroundColor();
+                                  // setImageColor();
+                                  //setDarkMode();
+                                  // setBackgroundColor();
                                 },
                                 icon: isdarkMode
                                     ? SvgPicture.asset(
@@ -366,7 +393,27 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset("assets/ad.png"),
+                isBannerAdReady
+                    ? Padding(
+                        padding: EdgeInsets.only(top: height * 0.05),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            width: 300,
+                            height: 250,
+                            child: AdWidget(
+                              ad: bannerAd,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        height: height * 0.25,
+                        width: width,
+                        child: Center(
+                          child: Text("Ad"),
+                        ),
+                      ),
                 SizedBox(
                   height: 10,
                 ),
@@ -439,10 +486,13 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
                       surah_name = widget.surah_name.toString();
                       //prefs.setInt("para", widget.parah_no);
                       prefs.setString('surah', surah_name);
+                      prefs.setString('time', recentTime);
                       print(
                           ".........................................................para no.......$para_num");
                       print(
-                          ".........................................................para no.......$surah_name");
+                          ".........................................................surah no.......$surah_name");
+                      print(
+                          ".........................................................time.......$recentTime");
                       growableList.addAll({pageIndex});
                       print(growableList);
                       onSave();
@@ -638,35 +688,6 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
                                       }
                                     },
                                   );
-                                  // return ListTile(
-                                  //   leading: SvgPicture.asset(
-                                  //     "assets/dialog/volume_selected.svg",
-                                  //     height: height * 0.02,
-                                  //     width: width * 0.02,
-                                  //   ),
-                                  //   title: Text(
-                                  //       "${soundModelList[index].soundTitle}"),
-                                  //   onTap: () async {
-                                  //     songpath =
-                                  //         soundModelList[index].page_sound;
-                                  //     ByteData bytes = await rootBundle.load(
-                                  //         songpath); //load sound from assets
-                                  //     Uint8List soundbytes = bytes.buffer
-                                  //         .asUint8List(bytes.offsetInBytes,
-                                  //             bytes.lengthInBytes);
-                                  //     int result = await mainController
-                                  //         .player.value
-                                  //         .playBytes(soundbytes);
-                                  //     if (result == 1) {
-                                  //       //play success
-                                  //       mainController.isPlaying.value = true;
-                                  //
-                                  //       print("Sound playing successful.");
-                                  //     } else {
-                                  //       print("Error while playing sound.");
-                                  //     }
-                                  //   },
-                                  // );
                                 })),
                       ),
                       visible: mainController.isVisibleSound.value,
@@ -835,57 +856,6 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
         });
   }
 
-  void _openDialog(String title, Widget content) {
-    showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          contentPadding: const EdgeInsets.all(6.0),
-          title: Text(title),
-          content: content,
-          actions: [
-            TextButton(
-              child: Text('CANCEL'),
-              onPressed: Navigator.of(context).pop,
-            ),
-            TextButton(
-              child: Text('SUBMIT'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                setState(() => mainColor = tempMainColor);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void openContainerColorPicker() async {
-    Visibility(
-      child: MaterialColorPicker(
-        selectedColor: ContainerColor,
-        allowShades: false,
-        onMainColorChange: (color) =>
-            setState(() => ContainerColor = color as Color),
-        //colors: [ColorsClass().color1],
-      ),
-      visible: true,
-    );
-  }
-
-  void openImageColorPicker() async {
-    _openDialog(
-      "Main Color picker",
-      MaterialColorPicker(
-        selectedColor: ImageColor,
-        allowShades: false,
-        onMainColorChange: (color) =>
-            setState(() => ImageColor = color as Color),
-      ),
-    );
-  }
-
   Widget pickerItemBuilderContainer(
       Color color, bool isCurrentColor, void Function() changeColor) {
     return Container(
@@ -959,7 +929,10 @@ class _QuranPakScreenState extends State<QuranPakScreen> {
     //     await SqfliteDatabaseHelperClass.instance.retrieveBookmarkDetails();
     // int id = lastRecord[SqfliteDatabaseHelperClass.COL_BOOKMARK_ID];
     book = BookmarkModel(
-        bookmarkPage: pageIndex.toString(), bookmarkSurah: para_num.toString());
+        bookmarkPage: pageIndex.toString(),
+        bookmarkSurah: para_num.toString(),
+        bookmarkTime:
+            "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}");
     bookmarkDb.insertBookmark(book);
     bookmarkDb.getBookmarks();
     print("...............saved: $pageIndex ");

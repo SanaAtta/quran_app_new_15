@@ -10,6 +10,7 @@ class SqfliteDatabaseHelperClass {
   static const String COL_BOOKMARK_ID = "bookmarkID";
   static const String COL_BOOKMARK_PAGE = "bookmark_page";
   static const String COL_BOOKMARK_SURAH = "bookmark_surah";
+  static const String COL_BOOKMARK_TIME = "bookmark_time";
 
   SqfliteDatabaseHelperClass._privateConstructor();
 
@@ -39,7 +40,8 @@ class SqfliteDatabaseHelperClass {
          CREATE TABLE $BOOKMARK_TABLE_NAME(
           $COL_BOOKMARK_ID INTEGER PRIMARY KEY ,
           $COL_BOOKMARK_PAGE TEXT NOT NULL ,
-          $COL_BOOKMARK_SURAH TEXT 
+          $COL_BOOKMARK_SURAH TEXT ,
+          $COL_BOOKMARK_TIME TEXT
       )
         ''');
       },

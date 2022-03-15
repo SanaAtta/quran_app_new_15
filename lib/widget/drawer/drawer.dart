@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:quran_app_new/colors/colors.dart';
+import 'package:quran_app_new/screens/web/webview-screen.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,10 +26,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     });
   }
 
-  String _url = "https://play.google.com/store/apps/details?id=";
-  void _launchURL() async => await canLaunch(_url + packageInfo.packageName)
+  String _url = "https://sites.google.com/view/eyesoltech/home";
+  void _launchURL() async => await canLaunch(_url)
       ? await launch(_url + packageInfo.packageName)
-      : throw 'Could not launch ${_url + packageInfo.packageName}';
+      : throw 'Could not launch ${_url}';
 
   @override
   void initState() {
@@ -55,22 +57,22 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           SizedBox(
             height: height * 0.1,
           ),
-          ListTile(
-            leading: SvgPicture.asset("assets/drawer/remove_ad.svg"),
-            title: Text(
-              "Remove Ads",
-              style: TextStyle(
-                  color: ColorsClass().dartColor,
-                  fontSize: 16,
-                  fontFamily: 'Al Qalam Quran Majeed Web Regular',
-                  package: 'awesome_package'),
-            ),
-            onTap: () {
-              // Get.to(Main_Screen(
-              //   my_index: pageIndex,
-              // ));
-            },
-          ),
+          // ListTile(
+          //   leading: SvgPicture.asset("assets/drawer/remove_ad.svg"),
+          //   title: Text(
+          //     "Remove Ads",
+          //     style: TextStyle(
+          //         color: ColorsClass().dartColor,
+          //         fontSize: 16,
+          //         fontFamily: 'Al Qalam Quran Majeed Web Regular',
+          //         package: 'awesome_package'),
+          //   ),
+          //   onTap: () {
+          //     // Get.to(Main_Screen(
+          //     //   my_index: pageIndex,
+          //     // ));
+          //   },
+          // ),
           ListTile(
             leading: SvgPicture.asset("assets/drawer/share.svg"),
             title: Text(
@@ -112,7 +114,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     package: 'awesome_package'),
               ),
               onTap: () {
-                _launchURL();
+                Get.to(WebViewPrivacyScreen());
               }),
           ListTile(
               leading: SvgPicture.asset("assets/drawer/more.svg"),

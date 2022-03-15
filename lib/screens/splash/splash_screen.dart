@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:quran_app_new/admob/ads.dart';
+import 'package:quran_app_new/colors/colors.dart';
 import 'package:quran_app_new/globals/globals.dart';
 import 'package:quran_app_new/screens/dashboard/dashboard_screen.dart';
 import 'package:quran_app_new/screens/surah_screen/surah_screen.dart';
@@ -14,11 +19,27 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  // TODO: Add _interstitialAd
+  InterstitialAd? interstitialAd;
+
+  // TODO: Add _isInterstitialAdReady
+  bool isloaded = false;
+  bool isLoading = false;
   @override
   void initState() {
+    _timer();
     getBookmarkIndex();
     getSurah();
+    getRecentTime();
     super.initState();
+    Ads.loadInterstitialAd();
+  }
+
+  getRecentTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    recentTime = prefs.getString('time')!;
+    print(".........................time: $recentTime");
+    setState(() {});
   }
 
   getSurah() async {
@@ -33,6 +54,14 @@ class _SplashScreenState extends State<SplashScreen> {
     pageIndex = prefs.getInt("currentIndex")!;
     print(".........................bookmark: $pageIndex");
     setState(() {});
+  }
+
+  _timer() {
+    Timer(Duration(seconds: 3), () {
+      setState(() {
+        isLoading = true;
+      });
+    });
   }
 
   @override
@@ -74,21 +103,38 @@ class _SplashScreenState extends State<SplashScreen> {
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                GestureDetector(
-                  child: Center(
-                      child: Padding(
-                    padding: EdgeInsets.only(bottom: height * 0.06),
-                    child: Image.asset("assets/splash/start.png"),
-                  )),
-                  onTap: () {
-                    Get.to(DashboardScreen());
-                  },
-                ),
+                isLoading == true
+                    ? GestureDetector(
+                        child: Center(
+                            child: Padding(
+                          padding: EdgeInsets.only(bottom: height * 0.06),
+                          child: Image.asset("assets/splash/start.png"),
+                        )),
+                        onTap: () {
+                          Ads.showInterstitialAd();
+                          Get.to(DashboardScreen());
+                        },
+                      )
+                    : Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: height * 0.068),
+                          child: CircularProgressIndicator(
+                            color: ColorsClass().dartColor,
+                          ),
+                        ),
+                      )
               ],
             )
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: Dispose an InterstitialAd object
+    // _interstitialAd?.dispose();
+    super.dispose();
   }
 }

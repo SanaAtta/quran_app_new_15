@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:quran_app_new/colors/colors.dart';
 import 'package:quran_app_new/globals/globals.dart';
 import 'package:quran_app_new/model/bookmark_model.dart';
@@ -26,6 +27,33 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
     });
     //onSave();
     super.initState();
+  }
+
+  late NativeAd _ad;
+  bool isLoaded = false;
+  @override
+  void dispose() {
+    _ad.dispose();
+    super.dispose();
+  }
+
+  void loadNativeAd() {
+    _ad = NativeAd(
+        request: const AdRequest(),
+
+        ///This is a test adUnitId make sure to change it
+        adUnitId: 'ca-app-pub-3940256099942544/2247696110',
+        factoryId: 'listTile',
+        listener: NativeAdListener(onAdLoaded: (ad) {
+          setState(() {
+            isLoaded = true;
+          });
+        }, onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+          print('failed to load the ad ${error.message}, ${error.code}');
+        }));
+
+    _ad.load();
   }
 
   void loadBookmarks() {
@@ -76,7 +104,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                                         package: "awesome_package"),
                                   ),
                                   subtitle: Text(
-                                    "Para: ${snapshot.data?[index].bookmarkSurah}",
+                                    "Para: ${snapshot.data?[index].bookmarkSurah},              ${snapshot.data?[index].bookmarkTime}",
                                     style: TextStyle(
                                         color: ColorsClass().dartColor,
                                         fontSize: 16,

@@ -17,6 +17,8 @@ class MainController extends GetxController {
   var volume_icon = SvgPicture.asset("assets/dialog/volume_selected.svg").obs;
   var mute_icon = SvgPicture.asset("assets/dialog/volume.svg").obs;
   int soundIndex = 0;
+  var paraCount = 0.obs;
+  var surahCount = 0.obs;
 
   void showWidget() {
     viewVisible.value = true;
@@ -34,6 +36,14 @@ class MainController extends GetxController {
   stop() {
     player.value.stop();
     isPlaying.value = false;
+  }
+
+  paraIncrement() {
+    paraCount++;
+  }
+
+  surahIncrement() {
+    surahCount++;
   }
 
   overlayVisibilty() {
