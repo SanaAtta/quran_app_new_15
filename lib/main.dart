@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import 'package:quran_app_new/screens/dashboard/dashboard_screen.dart';
 import 'package:quran_app_new/screens/first_screen/first_screen.dart';
 import 'package:quran_app_new/screens/splash/splash_screen.dart';
+import 'package:wakelock/wakelock.dart';
 
 import 'model/sound_model.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  await Wakelock.enable();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
